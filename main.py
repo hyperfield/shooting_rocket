@@ -142,15 +142,18 @@ def draw_frame(canvas, start_row, start_column, text, negative=False):
 
 async def animate_spaceship(canvas, rocket, column, row, space_pressed):
     """Interchanges spaceship frames."""
-
+    max_y, max_x = curses.window.getmaxyx(canvas)
     iterator = cycle(rocket)
-
-    for frame in iterator:
-        draw_frame(canvas, row, column, frame)
-        canvas.refresh()
-        await asyncio.sleep(0)
-        draw_frame(canvas, row, column, frame, negative=True)
-        canvas.refresh()
+    while 1 < row < max_y and 1 < column < max_x:
+        x_shift, y_shift, space_pressed = read_controls(canvas)
+        row = row + y_shift
+        column = column + x_shift
+        for frame in iterator:
+            draw_frame(canvas, row, column, frame)
+            canvas.refresh()
+            await asyncio.sleep(0)
+            draw_frame(canvas, row, column, frame, negative=True)
+            canvas.refresh()
 
 
 def draw(canvas):
@@ -162,7 +165,7 @@ def draw(canvas):
     curses.curs_set(False)
     coroutines = []
 
-    for _ in range(150):
+    for _ in range(100):
         blink_delay = random.randint(0, 10)
         x = random.randint(2, max_x-2)
         y = random.randint(2, max_y-2)
@@ -173,21 +176,15 @@ def draw(canvas):
     row = max_y / 2 - 2
     column = max_x / 2
     space_pressed = False
-    # r_coroutine = animate_spaceship(canvas, rocket, row, column, 3)
-    # coroutines.append(r_coroutine)
+    r_coroutine = animate_spaceship(canvas, rocket, row,
+                                    column, space_pressed)
+    coroutines.append(r_coroutine)
 
     while True:
         try:
-            x_shift, y_shift, space_pressed = read_controls(canvas)
-            row = row + y_shift
-            column = column + x_shift
-            r_coroutine = animate_spaceship(
-                canvas, rocket, row, column, space_pressed)
-            coroutines.append(r_coroutine)
             for coroutine in coroutines.copy():
                 coroutine.send(None)
                 canvas.refresh()
-            coroutines.remove(r_coroutine)
             sleep(TIC_TIMEOUT)
         except StopIteration:
             coroutines.remove(coroutine)
