@@ -11,6 +11,7 @@ LEFT_KEY_CODE = 260
 RIGHT_KEY_CODE = 261
 UP_KEY_CODE = 259
 DOWN_KEY_CODE = 258
+ROCKET_SPEED_FACTOR = 3
 
 
 def read_controls(canvas):
@@ -140,7 +141,7 @@ def draw_frame(canvas, start_row, start_column, text, negative=False):
             canvas.addch(row, column, symbol)
 
 
-async def animate_spaceship(canvas, rocket, column, row, space_pressed):
+async def animate_spaceship(canvas, rocket, col, row, space_pressed):
     """Interchanges spaceship frames."""
     max_y, max_x = curses.window.getmaxyx(canvas)
     # Take rocket dimensions into account
@@ -149,16 +150,26 @@ async def animate_spaceship(canvas, rocket, column, row, space_pressed):
     iterator = cycle(rocket)
     for frame in iterator:
         y_shift, x_shift, space_pressed = read_controls(canvas)
+        y_shift *= ROCKET_SPEED_FACTOR
+        x_shift *= ROCKET_SPEED_FACTOR
         new_row = row + y_shift
         if (1 <= new_row <= max_y):
             row = new_row
-        new_col = column + x_shift
+        elif new_row < 1:
+            row = 1
+        else:
+            row = max_y
+        new_col = col + x_shift
         if (1 <= new_col <= max_x):
-            column = new_col
-        draw_frame(canvas, row, column, frame)
+            col = new_col
+        elif new_col < 1:
+            col = 1
+        else:
+            col = max_x
+        draw_frame(canvas, row, col, frame)
         canvas.refresh()
         await asyncio.sleep(0)
-        draw_frame(canvas, row, column, frame, negative=True)
+        draw_frame(canvas, row, col, frame, negative=True)
         canvas.refresh()
 
 
