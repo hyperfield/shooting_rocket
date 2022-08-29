@@ -143,17 +143,23 @@ def draw_frame(canvas, start_row, start_column, text, negative=False):
 async def animate_spaceship(canvas, rocket, column, row, space_pressed):
     """Interchanges spaceship frames."""
     max_y, max_x = curses.window.getmaxyx(canvas)
+    # Take rocket dimensions into account
+    max_y -= 10
+    max_x -= 6
     iterator = cycle(rocket)
-    while 1 < row < max_y and 1 < column < max_x:
-        x_shift, y_shift, space_pressed = read_controls(canvas)
-        row = row + y_shift
-        column = column + x_shift
-        for frame in iterator:
-            draw_frame(canvas, row, column, frame)
-            canvas.refresh()
-            await asyncio.sleep(0)
-            draw_frame(canvas, row, column, frame, negative=True)
-            canvas.refresh()
+    for frame in iterator:
+        y_shift, x_shift, space_pressed = read_controls(canvas)
+        new_row = row + y_shift
+        if (1 <= new_row <= max_y):
+            row = new_row
+        new_col = column + x_shift
+        if (1 <= new_col <= max_x):
+            column = new_col
+        draw_frame(canvas, row, column, frame)
+        canvas.refresh()
+        await asyncio.sleep(0)
+        draw_frame(canvas, row, column, frame, negative=True)
+        canvas.refresh()
 
 
 def draw(canvas):
@@ -165,19 +171,21 @@ def draw(canvas):
     curses.curs_set(False)
     coroutines = []
 
-    for _ in range(100):
+    local_max_x = max_x - 2
+    local_max_y = max_y - 2
+    for _ in range(50):
         blink_delay = random.randint(0, 10)
-        x = random.randint(2, max_x-2)
-        y = random.randint(2, max_y-2)
+        x = random.randint(2, local_max_x)
+        y = random.randint(2, local_max_y)
         star = random.choice(stars)
         coroutines.append(blink(canvas, x, y, star, blink_delay))
     coroutines.append(fire(canvas, center_x, center_y))
 
-    row = max_y / 2 - 2
-    column = max_x / 2
+    start_row = max_y/2 - 2
+    start_col = max_x/2
     space_pressed = False
-    r_coroutine = animate_spaceship(canvas, rocket, row,
-                                    column, space_pressed)
+    r_coroutine = animate_spaceship(canvas, rocket, start_row,
+                                    start_col, space_pressed)
     coroutines.append(r_coroutine)
 
     while True:
