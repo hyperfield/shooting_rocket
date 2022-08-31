@@ -2,7 +2,7 @@ import curses
 import random
 from time import sleep
 
-from objects import rocket
+from assets import rocket
 from animations import blink, fire, animate_spaceship
 from settings import TIC_TIMEOUT
 
