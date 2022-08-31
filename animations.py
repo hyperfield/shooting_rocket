@@ -6,26 +6,27 @@ from settings import TIC_TIMEOUT, ROCKET_SPEED_FACTOR
 from controls import read_controls
 
 
+async def run_time_delay(delay_time):
+    for _ in range(int(delay_time/TIC_TIMEOUT)):
+        await asyncio.sleep(0)
+
+
 async def blink(canvas, row, column, symbol, blink_delay):
     canvas.addstr(row, column, symbol, curses.A_DIM)
     for _ in range(blink_delay):
         await asyncio.sleep(0)
     while True:
         canvas.addstr(row, column, symbol, curses.A_DIM)
-        for _ in range(int(2/TIC_TIMEOUT)):
-            await asyncio.sleep(0)
+        await run_time_delay(2)
 
         canvas.addstr(row, column, symbol)
-        for _ in range(int(0.3/TIC_TIMEOUT)):
-            await asyncio.sleep(0)
+        await run_time_delay(0.3)
 
         canvas.addstr(row, column, symbol, curses.A_BOLD)
-        for _ in range(int(0.5/TIC_TIMEOUT)):
-            await asyncio.sleep(0)
+        await run_time_delay(0.5)
 
         canvas.addstr(row, column, symbol)
-        for _ in range(int(0.3/TIC_TIMEOUT)):
-            await asyncio.sleep(0)
+        await run_time_delay(0.3)
 
 
 async def fire(canvas, start_row, start_column, rows_speed=-0.4,
