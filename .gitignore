@@ -159,6 +159,11 @@ cython_debug/
 # VS Code
 *.code-workspace
 
+# Temp
+random
+asyncio
+curses
+
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
