@@ -28,9 +28,9 @@ def draw(canvas):
     start_row = max_y/2 - 2
     start_col = max_x/2
     space_pressed = False
-    r_coroutine = animate_spaceship(canvas, get_rocket(), start_row,
-                                    start_col, space_pressed)
-    coroutines.append(r_coroutine)
+    rocket_coroutine = animate_spaceship(canvas, get_rocket(), start_row,
+                                         start_col, space_pressed)
+    coroutines.append(rocket_coroutine)
 
     while True:
         try:
