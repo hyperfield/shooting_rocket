@@ -62,10 +62,10 @@ async def fire(canvas, start_row, start_column, rows_speed=-0.4,
 
 async def animate_spaceship(canvas, rocket, col, row, space_pressed):
     """Interchanges spaceship frames."""
-    max_y, max_x = curses.window.getmaxyx(canvas)
+    margin_row, margin_col = curses.window.getmaxyx(canvas)
     # Take rocket dimensions into account
-    max_y -= 10
-    max_x -= 6
+    max_y = margin_row - 10
+    max_x = margin_col - 6
     iterator = cycle(rocket)
     for frame in iterator:
         y_shift, x_shift, space_pressed = read_controls(canvas)
