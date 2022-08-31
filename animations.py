@@ -8,7 +8,6 @@ from controls import read_controls
 
 async def blink(canvas, row, column, symbol, blink_delay):
     canvas.addstr(row, column, symbol, curses.A_DIM)
-    canvas.refresh()
     for _ in range(blink_delay):
         await asyncio.sleep(0)
     while True:
@@ -86,10 +85,8 @@ async def animate_spaceship(canvas, rocket, col, row, space_pressed):
         else:
             col = max_x
         draw_frame(canvas, row, col, frame)
-        canvas.refresh()
         await asyncio.sleep(0)
         draw_frame(canvas, row, col, frame, negative=True)
-        canvas.refresh()
 
 
 def draw_frame(canvas, start_row, start_column, text, negative=False):

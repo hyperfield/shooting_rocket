@@ -36,7 +36,7 @@ def draw(canvas):
         try:
             for coroutine in coroutines.copy():
                 coroutine.send(None)
-                canvas.refresh()
+            canvas.refresh()
             sleep(TIC_TIMEOUT)
         except StopIteration:
             coroutines.remove(coroutine)
