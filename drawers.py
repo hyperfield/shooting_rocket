@@ -2,7 +2,7 @@ import curses
 import random
 from time import sleep
 
-from assets import rocket
+from assets import get_rocket
 from animations import blink, fire, animate_spaceship
 from settings import TIC_TIMEOUT
 
@@ -28,7 +28,7 @@ def draw(canvas):
     start_row = max_y/2 - 2
     start_col = max_x/2
     space_pressed = False
-    r_coroutine = animate_spaceship(canvas, rocket(), start_row,
+    r_coroutine = animate_spaceship(canvas, get_rocket(), start_row,
                                     start_col, space_pressed)
     coroutines.append(r_coroutine)
 
