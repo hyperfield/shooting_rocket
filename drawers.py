@@ -10,7 +10,7 @@ from settings import TIC_TIMEOUT
 def draw(canvas):
     stars = "+*.:"
     margin_col, margin_row = curses.window.getmaxyx(canvas)
-    center_x, center_y = margin_col/2 - 0.1, margin_row/2
+    center_x, center_y = margin_col / 2 - 0.1, margin_row / 2
     canvas.border()
     curses.curs_set(False)
     coroutines = []
@@ -25,18 +25,21 @@ def draw(canvas):
         coroutines.append(blink(canvas, x, y, star, blink_delay))
     coroutines.append(fire(canvas, center_x, center_y))
 
-    start_row = margin_row/2 - 2
-    start_col = margin_col/2
+    start_row = margin_row / 2 - 2
+    start_col = margin_col / 2
     space_pressed = False
     rocket_coroutine = animate_spaceship(canvas, get_rocket(), start_row,
                                          start_col, space_pressed)
-    coroutines.append(rocket_coroutine)
+    rocket_refresh = True
 
     while True:
         try:
+            if (rocket_refresh):
+                rocket_coroutine.send(None)
             for coroutine in coroutines.copy():
                 coroutine.send(None)
             canvas.refresh()
             sleep(TIC_TIMEOUT)
+            rocket_refresh = not rocket_refresh
         except StopIteration:
             coroutines.remove(coroutine)
