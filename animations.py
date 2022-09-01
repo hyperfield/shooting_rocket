@@ -64,10 +64,10 @@ async def animate_spaceship(canvas, rocket, col, row, space_pressed):
     """Interchanges spaceship frames."""
     margin_row, margin_col = curses.window.getmaxyx(canvas)
     # Take rocket dimensions into account
-    rocket_length_offset = 10
-    rocket_width_offset = 6
-    max_y = margin_row - rocket_length_offset
-    max_x = margin_col - rocket_width_offset
+    ROCKET_LENGTH_OFFSET = 10
+    ROCKET_WIDTH_OFFSET = 6
+    max_y = margin_row - ROCKET_LENGTH_OFFSET
+    max_x = margin_col - ROCKET_WIDTH_OFFSET
     iterator = cycle(rocket)
     for frame in iterator:
         y_shift, x_shift, space_pressed = read_controls(canvas)

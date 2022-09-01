@@ -15,10 +15,10 @@ def draw(canvas):
     curses.curs_set(False)
     coroutines = []
 
-    x_margin_offset = 2
-    y_margin_offset = 2
-    local_max_x = margin_col - x_margin_offset
-    local_max_y = margin_row - y_margin_offset
+    X_MARGIN_OFFSET = 2
+    Y_MARGIN_OFFSET = 2
+    local_max_x = margin_col - X_MARGIN_OFFSET
+    local_max_y = margin_row - Y_MARGIN_OFFSET
     for _ in range(50):
         blink_delay = random.randint(0, 10)
         x = random.randint(2, local_max_x)
@@ -27,7 +27,7 @@ def draw(canvas):
         coroutines.append(blink(canvas, x, y, star, blink_delay))
     coroutines.append(fire(canvas, center_x, center_y))
 
-    start_row = margin_row / 2 - y_margin_offset
+    start_row = margin_row / 2 - Y_MARGIN_OFFSET
     start_col = margin_col / 2
     space_pressed = False
     rocket_coroutine = animate_spaceship(canvas, get_rocket(), start_row,
