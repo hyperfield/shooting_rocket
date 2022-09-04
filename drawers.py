@@ -2,7 +2,7 @@ import curses
 import random
 from time import sleep
 
-from assets import get_rocket
+from assets import get_rocket_frames
 from animations import blink, fire, animate_spaceship
 from settings import TIC_TIMEOUT
 
@@ -15,10 +15,10 @@ def draw(canvas):
     curses.curs_set(False)
     coroutines = []
 
-    X_MARGIN_OFFSET = 2
-    Y_MARGIN_OFFSET = 2
-    local_max_x = margin_col - X_MARGIN_OFFSET
-    local_max_y = margin_row - Y_MARGIN_OFFSET
+    x_margin_offset = 2
+    y_margin_offset = 2
+    local_max_x = margin_col - x_margin_offset
+    local_max_y = margin_row - y_margin_offset
     for _ in range(50):
         blink_delay = random.randint(0, 10)
         x = random.randint(2, local_max_x)
@@ -27,21 +27,23 @@ def draw(canvas):
         coroutines.append(blink(canvas, x, y, star, blink_delay))
     coroutines.append(fire(canvas, center_x, center_y))
 
-    start_row = margin_row / 2 - Y_MARGIN_OFFSET
+    start_row = margin_row / 2 - y_margin_offset
     start_col = margin_col / 2
     space_pressed = False
-    rocket_coroutine = animate_spaceship(canvas, get_rocket(), start_row,
-                                         start_col, space_pressed)
+    rocket_coroutine = animate_spaceship(
+        canvas, get_rocket_frames(),
+        start_row, start_col, space_pressed
+        )
     rocket_refresh = True
 
     while True:
-        try:
-            if (rocket_refresh):
-                rocket_coroutine.send(None)
-            for coroutine in coroutines.copy():
+        if (rocket_refresh):
+            rocket_coroutine.send(None)
+        for coroutine in coroutines.copy():
+            try:
                 coroutine.send(None)
-            canvas.refresh()
-            sleep(TIC_TIMEOUT)
-            rocket_refresh = not rocket_refresh
-        except StopIteration:
-            coroutines.remove(coroutine)
+            except StopIteration:
+                coroutines.remove(coroutine)
+        canvas.refresh()
+        sleep(TIC_TIMEOUT)
+        rocket_refresh = not rocket_refresh

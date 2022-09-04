@@ -6,7 +6,7 @@ from settings import TIC_TIMEOUT, ROCKET_SPEED_FACTOR
 from controls import read_controls
 
 
-async def run_time_delay(delay_time):
+async def sleep(delay_time):
     for _ in range(int(delay_time/TIC_TIMEOUT)):
         await asyncio.sleep(0)
 
@@ -17,16 +17,16 @@ async def blink(canvas, row, column, symbol, blink_delay):
         await asyncio.sleep(0)
     while True:
         canvas.addstr(row, column, symbol, curses.A_DIM)
-        await run_time_delay(2)
+        await sleep(2)
 
         canvas.addstr(row, column, symbol)
-        await run_time_delay(0.3)
+        await sleep(0.3)
 
         canvas.addstr(row, column, symbol, curses.A_BOLD)
-        await run_time_delay(0.5)
+        await sleep(0.5)
 
         canvas.addstr(row, column, symbol)
-        await run_time_delay(0.3)
+        await sleep(0.3)
 
 
 async def fire(canvas, start_row, start_column, rows_speed=-0.4,
@@ -64,10 +64,10 @@ async def animate_spaceship(canvas, rocket, col, row, space_pressed):
     """Interchanges spaceship frames."""
     margin_row, margin_col = curses.window.getmaxyx(canvas)
     # Take rocket dimensions into account
-    ROCKET_LENGTH_OFFSET = 10
-    ROCKET_WIDTH_OFFSET = 6
-    max_y = margin_row - ROCKET_LENGTH_OFFSET
-    max_x = margin_col - ROCKET_WIDTH_OFFSET
+    rocket_length_offset = 10
+    rocket_width_offset = 6
+    max_y = margin_row - rocket_length_offset
+    max_x = margin_col - rocket_width_offset
     iterator = cycle(rocket)
     for frame in iterator:
         y_shift, x_shift, space_pressed = read_controls(canvas)

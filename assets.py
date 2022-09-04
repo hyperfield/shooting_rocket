@@ -1,4 +1,4 @@
-def get_rocket():
+def get_rocket_frames():
     rocket_frames = []
     for frame_no in range(1, 3):
         with open(f"frames/rocket_frame_{frame_no}.txt", "r") as frame_file:
