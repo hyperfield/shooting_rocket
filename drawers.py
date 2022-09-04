@@ -29,10 +29,9 @@ def draw(canvas):
 
     start_row = margin_row / 2 - y_margin_offset
     start_col = margin_col / 2
-    space_pressed = False
     rocket_coroutine = animate_spaceship(
         canvas, get_rocket_frames(),
-        start_row, start_col, space_pressed
+        start_row, start_col
         )
     coroutines.append(rocket_coroutine)
 

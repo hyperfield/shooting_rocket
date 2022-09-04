@@ -60,7 +60,7 @@ async def fire(canvas, start_row, start_column, rows_speed=-0.4,
         column += columns_speed
 
 
-async def animate_spaceship(canvas, rocket, col, row, space_pressed):
+async def animate_spaceship(canvas, rocket, col, row, space_pressed=False):
     """Interchanges spaceship frames."""
     margin_row, margin_col = curses.window.getmaxyx(canvas)
     # Take rocket dimensions into account
@@ -88,7 +88,7 @@ async def animate_spaceship(canvas, rocket, col, row, space_pressed):
         else:
             col = max_x
         draw_frame(canvas, row, col, frame)
-        await sleep(TIC_TIMEOUT*2)
+        await sleep(TIC_TIMEOUT * 2)
         draw_frame(canvas, row, col, frame, negative=True)
 
 
