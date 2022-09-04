@@ -88,7 +88,7 @@ async def animate_spaceship(canvas, rocket, col, row, space_pressed):
         else:
             col = max_x
         draw_frame(canvas, row, col, frame)
-        await asyncio.sleep(0)
+        await sleep(TIC_TIMEOUT*2)
         draw_frame(canvas, row, col, frame, negative=True)
 
 

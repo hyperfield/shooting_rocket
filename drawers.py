@@ -34,11 +34,9 @@ def draw(canvas):
         canvas, get_rocket_frames(),
         start_row, start_col, space_pressed
         )
-    rocket_refresh = True
+    coroutines.append(rocket_coroutine)
 
     while True:
-        if (rocket_refresh):
-            rocket_coroutine.send(None)
         for coroutine in coroutines.copy():
             try:
                 coroutine.send(None)
@@ -46,4 +44,3 @@ def draw(canvas):
                 coroutines.remove(coroutine)
         canvas.refresh()
         sleep(TIC_TIMEOUT)
-        rocket_refresh = not rocket_refresh
