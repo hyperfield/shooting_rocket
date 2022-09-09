@@ -22,7 +22,7 @@ def draw(canvas):
     for _ in range(50):
         blink_delay = random.randint(0, 10)
         x = random.randint(x_margin_offset, local_max_x)
-        y = random.randint(x_margin_offset, local_max_y)
+        y = random.randint(y_margin_offset, local_max_y)
         star = random.choice(stars)
         coroutines.append(blink(canvas, x, y, star, blink_delay))
     coroutines.append(fire(canvas, center_x, center_y))
