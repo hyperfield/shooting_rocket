@@ -60,7 +60,31 @@ async def fire(canvas, start_row, start_column, rows_speed=-0.4,
         column += columns_speed
 
 
-async def animate_spaceship(canvas, rocket, col, row, space_pressed=False):
+def update_rocket_coordinates_on_input(canvas, current_row, current_col,
+                                       frame, max_y, max_x, negative=False):
+    y_shift, x_shift, space_pressed = read_controls(canvas)
+    y_shift *= ROCKET_SPEED_FACTOR
+    x_shift *= ROCKET_SPEED_FACTOR
+    draw_frame(canvas, current_row, current_col, frame, negative=True)
+    new_row = current_row + y_shift
+    if (1 <= new_row <= max_y):
+        current_row = new_row
+    elif new_row < 1:
+        current_row = 1
+    else:
+        current_row = max_y
+    new_col = current_col + x_shift
+    if (1 <= new_col <= max_x):
+        current_col = new_col
+    elif new_col < 1:
+        current_col = 1
+    else:
+        current_col = max_x
+    draw_frame(canvas, current_row, current_col, frame, negative=negative)
+    return current_row, current_col
+
+
+async def animate_spaceship(canvas, rocket, current_col, current_row):
     """Interchanges spaceship frames."""
     margin_row, margin_col = curses.window.getmaxyx(canvas)
     # Take rocket dimensions into account
@@ -70,26 +94,17 @@ async def animate_spaceship(canvas, rocket, col, row, space_pressed=False):
     max_x = margin_col - rocket_width_offset
     iterator = cycle(rocket)
     for frame in iterator:
-        y_shift, x_shift, space_pressed = read_controls(canvas)
-        y_shift *= ROCKET_SPEED_FACTOR
-        x_shift *= ROCKET_SPEED_FACTOR
-        new_row = row + y_shift
-        if (1 <= new_row <= max_y):
-            row = new_row
-        elif new_row < 1:
-            row = 1
-        else:
-            row = max_y
-        new_col = col + x_shift
-        if (1 <= new_col <= max_x):
-            col = new_col
-        elif new_col < 1:
-            col = 1
-        else:
-            col = max_x
-        draw_frame(canvas, row, col, frame)
-        await sleep(TIC_TIMEOUT * 2)
-        draw_frame(canvas, row, col, frame, negative=True)
+        current_row, current_col = update_rocket_coordinates_on_input(
+                                                  canvas, current_row,
+                                                  current_col, frame,
+                                                  max_y, max_x
+                                                  )
+        await sleep(TIC_TIMEOUT)
+        current_row, current_col = update_rocket_coordinates_on_input(
+                                                  canvas, current_row,
+                                                  current_col, frame,
+                                                  max_y, max_x, negative=True
+                                                  )
 
 
 def draw_frame(canvas, start_row, start_column, text, negative=False):
