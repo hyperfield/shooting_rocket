@@ -61,16 +61,14 @@ async def fire(canvas, start_row, start_column, rows_speed=-0.4,
 
 
 def update_rocket_coordinates_on_input(canvas, current_row, current_col,
-                                       frame, max_y, max_x, negative=False):
+                                       frame, max_y, max_x):
     y_shift, x_shift, space_pressed = read_controls(canvas)
     y_shift *= ROCKET_SPEED_FACTOR
     x_shift *= ROCKET_SPEED_FACTOR
-    draw_frame(canvas, current_row, current_col, frame, negative=True)
     new_row = current_row + y_shift
     current_row = min(max(1, new_row), max_y)
     new_col = current_col + x_shift
     current_col = min(max(1, new_col), max_x)
-    draw_frame(canvas, current_row, current_col, frame, negative=negative)
     return current_row, current_col
 
 
@@ -90,12 +88,9 @@ async def animate_spaceship(canvas, rocket, current_col, current_row):
                                                     current_col, frame,
                                                     max_y, max_x
                                                     )
+            draw_frame(canvas, current_row, current_col, frame, negative=False)
             await sleep(TIC_TIMEOUT)
-            current_row, current_col = update_rocket_coordinates_on_input(
-                                                    canvas, current_row,
-                                                    current_col, frame,
-                                                    max_y, max_x, negative=True
-                                                    )
+            draw_frame(canvas, current_row, current_col, frame, negative=True)
 
 
 def draw_frame(canvas, start_row, start_column, text, negative=False):
