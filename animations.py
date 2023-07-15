@@ -67,19 +67,9 @@ def update_rocket_coordinates_on_input(canvas, current_row, current_col,
     x_shift *= ROCKET_SPEED_FACTOR
     draw_frame(canvas, current_row, current_col, frame, negative=True)
     new_row = current_row + y_shift
-    if (1 <= new_row <= max_y):
-        current_row = new_row
-    elif new_row < 1:
-        current_row = 1
-    else:
-        current_row = max_y
+    current_row = min(max(1, new_row), max_y)
     new_col = current_col + x_shift
-    if (1 <= new_col <= max_x):
-        current_col = new_col
-    elif new_col < 1:
-        current_col = 1
-    else:
-        current_col = max_x
+    current_col = min(max(1, new_col), max_x)
     draw_frame(canvas, current_row, current_col, frame, negative=negative)
     return current_row, current_col
 
