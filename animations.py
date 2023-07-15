@@ -84,17 +84,18 @@ async def animate_spaceship(canvas, rocket, current_col, current_row):
     max_x = margin_col - rocket_width_offset
     iterator = cycle(rocket)
     for frame in iterator:
-        current_row, current_col = update_rocket_coordinates_on_input(
-                                                  canvas, current_row,
-                                                  current_col, frame,
-                                                  max_y, max_x
-                                                  )
-        await sleep(TIC_TIMEOUT)
-        current_row, current_col = update_rocket_coordinates_on_input(
-                                                  canvas, current_row,
-                                                  current_col, frame,
-                                                  max_y, max_x, negative=True
-                                                  )
+        for _ in range(2):
+            current_row, current_col = update_rocket_coordinates_on_input(
+                                                    canvas, current_row,
+                                                    current_col, frame,
+                                                    max_y, max_x
+                                                    )
+            await sleep(TIC_TIMEOUT)
+            current_row, current_col = update_rocket_coordinates_on_input(
+                                                    canvas, current_row,
+                                                    current_col, frame,
+                                                    max_y, max_x, negative=True
+                                                    )
 
 
 def draw_frame(canvas, start_row, start_column, text, negative=False):
