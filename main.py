@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import curses
 
 from drawers import draw
